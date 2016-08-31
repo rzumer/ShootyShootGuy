@@ -1,5 +1,8 @@
 debug = true
 
+scoreFont = love.graphics.newFont("assets/Pixeled.ttf", 12)
+messageFont = love.graphics.newFont("assets/Pixeled.ttf", 16)
+
 -- Units
 player = { x = 0, y = 0, spawnX = 0, spawnY = 0, speed = 150, image = nil }
 zako = { speed = 50, spawnRate = 2, firstSpawnTimer = 2, spawnTimer = 2, spawnCount = 1, value = 1, image = nil, bulletSound = nil }
@@ -186,10 +189,16 @@ function love.update(dt)
 end
 
 function love.draw(dt)
+	love.graphics.setFont(scoreFont)
+	love.graphics.setColor(255, 255, 255)
+	
+	love.graphics.printf("Score: " .. tostring(score), -16, 20, love.graphics.getWidth(), "right")
+	
 	if isAlive then
 		love.graphics.draw(player.image, player.x, player.y)
 	else
-		love.graphics.printf("Press 'R' to restart", 0, 400, love.graphics.getWidth(), "center")
+		love.graphics.setFont(messageFont)
+		love.graphics.printf("Press R to restart", 0, 400, love.graphics.getWidth(), "center")
 	end
 	
 	for i, bullet in ipairs(bullets) do
