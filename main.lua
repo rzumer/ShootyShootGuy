@@ -18,6 +18,8 @@ spawnTimer = maxSpawnInterval
 -- Bullets
 bulletImage = nil
 bulletSound = nil
+hitSound = nil
+deathSound = nil
 bulletSpeed = 300 -- pixels per second
 bullets = {}
 
@@ -35,6 +37,8 @@ function love.load(arg)
 	player.y = player.spawnY
 	
 	bulletSound = love.audio.newSource("assets/shot.wav")
+	hitSound = love.audio.newSource("assets/hit.wav")
+	deathSound = love.audio.newSource("assets/death.wav")
 	
 	zako.image = love.graphics.newImage("assets/enemy.png")
 	zako.bulletSound = love.audio.newSource("assets/enemyshot.wav")
@@ -68,6 +72,7 @@ function love.update(dt)
 				score = score + enemy.type.value
 				table.remove(bullets, j)
 				table.remove(enemies, i)
+				love.audio.play(hitSound)
 			end
 		end
 		
@@ -75,6 +80,7 @@ function love.update(dt)
 			player.x, player.y, player.image:getWidth(), player.image:getHeight()) and isAlive then
 			table.remove(enemies, i)
 			isAlive = false
+			love.audio.play(deathSound)
 		end
 	end
 	
