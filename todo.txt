@@ -1,0 +1,4 @@
+1. Better collision detection (ignore transparent pixels)
+2. Enemies shooting and moving
+3. Power-ups
+4. Saving score
