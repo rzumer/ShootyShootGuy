@@ -11,13 +11,21 @@ reloadTime = 0.3 -- in seconds
 
 -- Bullets
 bulletImage = nil
+bulletSound = nil
 bulletSpeed = 250 -- pixels per second
 bullets = {}
+
+-- Enemies
+zako = { speed = 50, image = nil, bulletSound = nil }
 
 function love.load(arg)
 	player.image = love.graphics.newImage("assets/shiplight.png")
 	--enemyImage = love.graphics.newImage("assets/enemy.png")
 	bulletImage = love.graphics.newImage("assets/bullet.png")
+	bulletSound = love.audio.newSource("assets/shot.wav")
+	
+	zako.image = love.graphics.newImage("assets/enemy.png")
+	zako.bulletSound = love.audio.newSource("assets/enemyshot.wav")
 	
 	love.graphics.setBackgroundColor(0, 0, 50)
 end
@@ -66,6 +74,7 @@ function love.update(dt)
 	if love.keyboard.isDown('z') and canShoot then
 		newBullet = { x = player.x + (player.image:getWidth() / 2 - bulletImage:getWidth() / 2), y = player.y - bulletImage:getHeight(), image = bulletImage }
 		table.insert(bullets, newBullet)
+		love.audio.play(bulletSound)
 		canShoot = false
 		canShootTimer = reloadTime
 	end
