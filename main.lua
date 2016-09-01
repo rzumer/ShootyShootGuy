@@ -212,10 +212,13 @@ function love.update(dt)
 end
 
 function love.draw(dt)
-	love.graphics.setFont(scoreFont)
-	love.graphics.setColor(255, 255, 255)
+	for i, enemy in ipairs(enemies) do
+		love.graphics.draw(enemy.type.image, enemy.x, enemy.y)
+	end
 	
-	love.graphics.printf("Score: " .. tostring(score), -16, 20, love.graphics.getWidth(), "right")
+	for i, bullet in ipairs(bullets) do
+		love.graphics.draw(bullet.image, bullet.x, bullet.y)
+	end
 	
 	if isAlive then
 		love.graphics.draw(player.image, player.x, player.y)
@@ -224,11 +227,6 @@ function love.draw(dt)
 		love.graphics.printf("Press R to play", 0, 400, love.graphics.getWidth(), "center")
 	end
 	
-	for i, bullet in ipairs(bullets) do
-		love.graphics.draw(bullet.image, bullet.x, bullet.y)
-	end
-	
-	for i, enemy in ipairs(enemies) do
-		love.graphics.draw(enemy.type.image, enemy.x, enemy.y)
-	end
+	love.graphics.setFont(scoreFont)
+	love.graphics.printf("Score: " .. tostring(score), -16, 20, love.graphics.getWidth(), "right")
 end
