@@ -3,6 +3,7 @@ debug = true
 require "collision"
 scoreFont = love.graphics.newFont("assets/Pixeled.ttf", 12)
 messageFont = love.graphics.newFont("assets/Pixeled.ttf", 16)
+backgroundMusic = nil
 
 -- Units
 player = { x = 0, y = 0, spawnX = 0, spawnY = 0, speed = 150, image = nil }
@@ -28,7 +29,7 @@ bulletSpeed = 300 -- pixels per second
 bullets = {}
 
 -- Game State
-isAlive = true
+isAlive = false
 score = 0
 
 function love.load(arg)
@@ -53,6 +54,10 @@ function love.load(arg)
 	elite.bulletSound = love.audio.newSource("assets/enemyshot.wav")
 	elite.spawnTimer = elite.firstSpawnTimer
 	table.insert(enemyTypes, elite)
+	
+	backgroundMusic = love.audio.newSource("assets/bgmusic.wav")
+	backgroundMusic:setLooping(true)
+	--love.audio.play(backgroundMusic)
 	
 	love.graphics.setBackgroundColor(0, 0, 50)
 end
@@ -87,6 +92,7 @@ function love.update(dt)
 			table.remove(enemies, i)
 			isAlive = false
 			love.audio.play(deathSound)
+			love.audio.stop(backgroundMusic)
 		end
 	end
 	
@@ -173,21 +179,26 @@ function love.update(dt)
 		canShootTimer = reloadTime
 	end
 	
-	if not isAlive and love.keyboard.isDown('r') then
-		bullets = {}
-		enemies = {}
-		
-		canShootTimer = reloadTime
-		
-		for i, enemyType in ipairs(enemyTypes) do
-			enemyType.spawnTimer = enemyType.firstSpawnTimer
+	if not isAlive then
+		if love.keyboard.isDown('r') then
+			bullets = {}
+			enemies = {}
+			
+			canShootTimer = reloadTime
+			
+			for i, enemyType in ipairs(enemyTypes) do
+				enemyType.spawnTimer = enemyType.firstSpawnTimer
+			end
+			
+			player.x = player.spawnX
+			player.y = player.spawnY
+			
+			score = 0
+			isAlive = true
+			
+			love.audio.rewind(backgroundMusic)
+			love.audio.play(backgroundMusic)
 		end
-		
-		player.x = player.spawnX
-		player.y = player.spawnY
-		
-		score = 0
-		isAlive = true
 	end
 end
 
@@ -201,7 +212,7 @@ function love.draw(dt)
 		love.graphics.draw(player.image, player.x, player.y)
 	else
 		love.graphics.setFont(messageFont)
-		love.graphics.printf("Press R to restart", 0, 400, love.graphics.getWidth(), "center")
+		love.graphics.printf("Press R to play", 0, 400, love.graphics.getWidth(), "center")
 	end
 	
 	for i, bullet in ipairs(bullets) do
