@@ -6,9 +6,10 @@ messageFont = love.graphics.newFont("assets/Pixeled.ttf", 16)
 backgroundMusic = nil
 
 -- Units
-player = { x = 0, y = 0, spawnX = 0, spawnY = 0, speed = 150, image = nil }
-zako = { speed = 50, spawnRate = 2, firstSpawnTimer = 2, spawnTimer = 2, spawnCount = 1, value = 1, image = nil, bulletSound = nil }
-elite = { speed = 200, spawnRate = 5, firstSpawnTimer = 10, spawnTimer = 10, spawnCount = 2, value = 3, image = nil, bulletSound = nil }
+player = { x = 0, y = 0, spawnX = 0, spawnY = 0, speed = 250, image = nil }
+zako = { speed = 170, spawnRate = 2, firstSpawnTimer = 2, spawnTimer = 2, spawnCount = 1, value = 1, image = nil, bulletSound = nil }
+elite = { speed = 300, spawnRate = 5, firstSpawnTimer = 10, spawnTimer = 10, spawnCount = 2, value = 3, image = nil, bulletSound = nil }
+elite2 = { speed = 300, spawnRate = 7, firstSpawnTimer = 28, spawnTimer = 28, spawnCount = 4, value = 3, image = nil, bulletSound = nil }
 enemyTypes = {}
 enemies = {}
 
@@ -25,7 +26,7 @@ bulletImage = nil
 bulletSound = nil
 hitSound = nil
 deathSound = nil
-bulletSpeed = 300 -- pixels per second
+bulletSpeed = 800 -- pixels per second
 bullets = {}
 
 -- Game State
@@ -54,6 +55,11 @@ function love.load(arg)
 	elite.bulletSound = love.audio.newSource("assets/enemyshot.wav")
 	elite.spawnTimer = elite.firstSpawnTimer
 	table.insert(enemyTypes, elite)
+	
+	elite2.image = love.graphics.newImage("assets/elite.png")
+	elite2.bulletSound = love.audio.newSource("assets/enemyshot.wav")
+	elite2.spawnTimer = elite2.firstSpawnTimer
+	table.insert(enemyTypes, elite2)
 	
 	backgroundMusic = love.audio.newSource("assets/bgmusic.wav")
 	backgroundMusic:setLooping(true)
@@ -151,35 +157,35 @@ function love.update(dt)
 		love.event.push('quit')
 	end
 	
-	if love.keyboard.isDown('left') then
-		if player.x > 0 then
-			player.x = player.x - (player.speed * dt)
+	if isAlive then
+		if love.keyboard.isDown('left') then
+			if player.x > 0 then
+				player.x = player.x - (player.speed * dt)
+			end
+		elseif love.keyboard.isDown('right') then
+			if player.x < (love.graphics.getWidth() - player.image:getWidth()) then
+				player.x = player.x + (player.speed * dt)
+			end
 		end
-	elseif love.keyboard.isDown('right') then
-		if player.x < (love.graphics.getWidth() - player.image:getWidth()) then
-			player.x = player.x + (player.speed * dt)
+		
+		if love.keyboard.isDown('up') then
+			if player.y > 0 then
+				player.y = player.y - (player.speed * dt)
+			end
+		elseif love.keyboard.isDown('down') then
+			if player.y < (love.graphics.getHeight() - player.image:getHeight()) then
+				player.y = player.y + (player.speed * dt)
+			end
 		end
-	end
-	
-	if love.keyboard.isDown('up') then
-		if player.y > 0 then
-			player.y = player.y - (player.speed * dt)
+		
+		if love.keyboard.isDown('z') and canShoot then
+			newBullet = { x = player.x + (player.image:getWidth() / 2 - bulletImage:getWidth() / 2), y = player.y - bulletImage:getHeight(), image = bulletImage }
+			table.insert(bullets, newBullet)
+			love.audio.play(bulletSound)
+			canShoot = false
+			canShootTimer = reloadTime
 		end
-	elseif love.keyboard.isDown('down') then
-		if player.y < (love.graphics.getHeight() - player.image:getHeight()) then
-			player.y = player.y + (player.speed * dt)
-		end
-	end
-	
-	if love.keyboard.isDown('z') and canShoot then
-		newBullet = { x = player.x + (player.image:getWidth() / 2 - bulletImage:getWidth() / 2), y = player.y - bulletImage:getHeight(), image = bulletImage }
-		table.insert(bullets, newBullet)
-		love.audio.play(bulletSound)
-		canShoot = false
-		canShootTimer = reloadTime
-	end
-	
-	if not isAlive then
+	else
 		if love.keyboard.isDown('r') then
 			bullets = {}
 			enemies = {}
