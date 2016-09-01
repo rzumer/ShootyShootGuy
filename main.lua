@@ -139,7 +139,7 @@ function love.update(dt)
 				--	newPosition = maxPosition
 				--end
 				
-				newEnemy = { x = newPosition, y = 0, type = enemyType }
+				newEnemy = { x = newPosition, y = 1 - enemyType.image:getHeight(), type = enemyType }
 				
 				table.insert(enemies, newEnemy)
 			end
