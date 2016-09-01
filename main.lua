@@ -83,7 +83,8 @@ function love.update(dt)
 	for i, enemy in ipairs(enemies) do
 		for j, bullet in ipairs(bullets) do
 			if checkBoxCollision(enemy.x, enemy.y, enemy.type.image:getWidth(), enemy.type.image:getHeight(),
-				bullet.x, bullet.y, bullet.image:getWidth(), bullet.image:getHeight()) then
+				bullet.x, bullet.y, bullet.image:getWidth(), bullet.image:getHeight())
+				and checkPixelCollision(bulletImage, enemy.type.image, bullet.x, bullet.y, enemy.x, enemy.y) then
 				if isAlive then
 					score = score + enemy.type.value
 				end
@@ -94,7 +95,9 @@ function love.update(dt)
 		end
 		
 		if checkBoxCollision(enemy.x, enemy.y, enemy.type.image:getWidth(), enemy.type.image:getHeight(),
-			player.x, player.y, player.image:getWidth(), player.image:getHeight()) and isAlive then
+			player.x, player.y, player.image:getWidth(), player.image:getHeight())
+			and checkPixelCollision(player.image, enemy.type.image, player.x, player.y, enemy.x, enemy.y)
+			and isAlive then
 			table.remove(enemies, i)
 			isAlive = false
 			love.audio.play(deathSound)
@@ -106,7 +109,7 @@ function love.update(dt)
 	for i, bullet in ipairs(bullets) do
 		bullet.y = bullet.y - (bulletSpeed * dt)
 		
-		if bullet.y < 0 then
+		if bullet.y < 0 - bulletImage:getHeight() then
 			table.remove(bullets, i)
 		end
 	end
