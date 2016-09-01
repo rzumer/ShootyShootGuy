@@ -1,4 +1,4 @@
-debug = true
+--debug = true
 
 require "collision"
 scoreFont = love.graphics.newFont("assets/Pixeled.ttf", 12)
