@@ -1,5 +1,5 @@
 # Shooty Shoot Guy
-Shooty Shoot Guy is a simple high score shmup. There are multiple enemy spawning patterns, and collisions are pixel perfect.
-Made with the LÖVE engine, MS Paint, FamiTracker and Bfxr.
+A simple high score shooting game, featuring multiple enemy spawning patterns, and pixel perfect collision detection.
+Made with the [LÖVE](https://love2d.org/) engine, [FamiTracker](http://famitracker.com/), [Bfxr](http://www.bfxr.net/) and Microsoft Paint.
 
 ![Shooty Shoot Guy](https://0x0.st/u4g.png)
